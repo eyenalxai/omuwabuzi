@@ -1,14 +1,13 @@
-import { getChats, removeChat } from '@/app/actions'
+import { removeChat } from '@/app/actions'
 import { SidebarActions } from '@/components/sidebar-actions'
 import { SidebarItem } from '@/components/sidebar-item'
+import { Chat } from '@/lib/types'
 
 export interface SidebarListProps {
-  userId?: string
+  chats: Chat[]
 }
 
-export async function SidebarList({ userId }: SidebarListProps) {
-  const chats = await getChats(userId)
-
+export async function SidebarList({ chats }: SidebarListProps) {
   return (
     <div className="flex-1 overflow-auto">
       {chats?.length ? (

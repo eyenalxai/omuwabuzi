@@ -7,6 +7,7 @@ export interface Chat extends Record<string, any> {
   createdAt: Date
   userId: string
   path: string
+  price: number
   messages: Message[]
 }
 

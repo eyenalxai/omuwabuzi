@@ -4,6 +4,7 @@ import { Configuration, OpenAIApi } from 'openai-edge'
 
 import { auth } from '@/auth'
 import { nanoid } from '@/lib/utils'
+import { calculatePrice } from '@/lib/pricing'
 
 export const runtime = 'edge'
 
@@ -16,6 +17,7 @@ const openai = new OpenAIApi(configuration)
 export async function POST(req: Request) {
   const json = await req.json()
   const { messages, previewToken, model } = json
+
   const session = await auth()
 
   if (session == null) {
@@ -43,20 +45,25 @@ export async function POST(req: Request) {
         const id = json.id ?? nanoid()
         const createdAt = Date.now()
         const path = `/chat/${id}`
+        const newMessages = [
+          ...messages,
+          {
+            content: completion,
+            role: 'assistant'
+          }
+        ]
+        const oldPrice: string | null = await kv.hget(`chat:${id}`, 'price')
+        const price = calculatePrice(newMessages, model, oldPrice)
+
         const payload = {
           id,
           title,
           userId,
           createdAt,
+          price,
           model,
           path,
-          messages: [
-            ...messages,
-            {
-              content: completion,
-              role: 'assistant'
-            }
-          ]
+          messages: newMessages
         }
         await kv.hmset(`chat:${id}`, payload)
         await kv.zadd(`user:chat:${userId}`, {

@@ -15,6 +15,8 @@ import {
 
 export interface UserMenuProps {
   user: Session['user']
+  totalSpent: number
+  totalSpentThisMonth: number
 }
 
 function getUserInitials(name: string) {
@@ -22,7 +24,11 @@ function getUserInitials(name: string) {
   return lastName ? `${firstName[0]}${lastName[0]}` : firstName.slice(0, 2)
 }
 
-export function UserMenu({ user }: UserMenuProps) {
+export function UserMenu({
+  user,
+  totalSpent,
+  totalSpentThisMonth
+}: UserMenuProps) {
   return (
     <div className="flex items-center justify-between">
       <DropdownMenu>
@@ -46,6 +52,12 @@ export function UserMenu({ user }: UserMenuProps) {
           <DropdownMenuItem className="flex-col items-start">
             <div className="text-xs font-medium">{user?.name}</div>
             <div className="text-xs text-zinc-500">{user?.email}</div>
+            <div className="mt-2 text-xs text-zinc-500">
+              ${totalSpentThisMonth.toFixed(2)} — Usage This Month
+            </div>
+            <div className="text-xs text-zinc-500">
+              ${totalSpent.toFixed(2)} — Usage Total
+            </div>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem

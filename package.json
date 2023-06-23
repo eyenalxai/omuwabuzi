@@ -30,6 +30,7 @@
     "class-variance-authority": "^0.6.0",
     "clsx": "^1.2.1",
     "focus-trap-react": "^10.1.4",
+    "gpt-tokenizer": "^2.1.1",
     "nanoid": "^4.0.2",
     "next": "13.4.7",
     "next-auth": "0.0.0-manual.e65faa1c",
