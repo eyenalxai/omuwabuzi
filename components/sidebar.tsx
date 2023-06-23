@@ -11,6 +11,9 @@ import {
   SheetTrigger
 } from '@/components/ui/sheet'
 import { IconSidebar } from '@/components/ui/icons'
+import Link from 'next/link'
+import { Separator } from '@/components/ui/separator'
+import { clsx } from 'clsx'
 
 export interface SidebarProps {
   children?: React.ReactNode
@@ -27,6 +30,13 @@ export function Sidebar({ children }: SidebarProps) {
       </SheetTrigger>
       <SheetContent className="inset-y-0 flex h-auto w-[300px] flex-col p-0">
         <SheetHeader className="p-4">
+          <Button asChild variant={'ghost'} className={clsx('w-24')}>
+            <Link href="/">
+              New Chat
+              <span className="sr-only">New Chat</span>
+            </Link>
+          </Button>
+          <Separator />
           <SheetTitle className="text-sm">Chat History</SheetTitle>
         </SheetHeader>
         {children}
