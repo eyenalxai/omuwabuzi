@@ -1,9 +1,12 @@
+'use client'
+
 import { type UseChatHelpers } from 'ai/react'
 
 import { Button } from '@/components/ui/button'
 import { PromptForm } from '@/components/prompt-form'
 import { ButtonScrollToBottom } from '@/components/button-scroll-to-bottom'
 import { IconRefresh, IconStop } from '@/components/ui/icons'
+import { usePathname, useRouter } from 'next/navigation'
 
 export interface ChatPanelProps
   extends Pick<
@@ -29,6 +32,9 @@ export function ChatPanel({
   setInput,
   messages
 }: ChatPanelProps) {
+  const router = useRouter()
+  const pathname = usePathname()
+
   return (
     <div className="fixed inset-x-0 bottom-0 bg-gradient-to-b from-muted/10 from-10% to-muted/30 to-50%">
       <ButtonScrollToBottom />
@@ -64,6 +70,10 @@ export function ChatPanel({
                 content: value,
                 role: 'user'
               })
+              if (pathname !== `/chat/${id}`) {
+                await router.push(`/chat/${id}`)
+                await router.refresh()
+              }
             }}
             input={input}
             setInput={setInput}
