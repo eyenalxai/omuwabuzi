@@ -5,7 +5,7 @@ import { clearChats, getChats } from '@/app/actions'
 import { Button } from '@/components/ui/button'
 import { Sidebar } from '@/components/sidebar'
 import { SidebarList } from '@/components/sidebar-list'
-import { IconNextChat, IconSeparator } from '@/components/ui/icons'
+import { IconOpenAI, IconSeparator } from '@/components/ui/icons'
 import { SidebarFooter } from '@/components/sidebar-footer'
 import { ClearHistory } from '@/components/clear-history'
 import { UserMenu } from '@/components/user-menu'
@@ -31,8 +31,7 @@ export async function Header() {
           </Sidebar>
         ) : (
           <Link href="/" target="_blank" rel="nofollow">
-            <IconNextChat className="mr-2 h-6 w-6 dark:hidden" inverted />
-            <IconNextChat className="mr-2 hidden h-6 w-6 dark:block" />
+            <IconOpenAI className="mr-2 block h-6 w-6" />
           </Link>
         )}
         <div className="flex items-center">
