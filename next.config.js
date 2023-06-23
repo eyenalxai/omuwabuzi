@@ -2,6 +2,7 @@
 module.exports = {
   reactStrictMode: false,
   experimental: {
-    serverActions: true
+    serverActions: true,
+    scrollRestoration: true
   }
 }
