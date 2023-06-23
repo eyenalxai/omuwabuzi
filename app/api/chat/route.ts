@@ -48,6 +48,7 @@ export async function POST(req: Request) {
           title,
           userId,
           createdAt,
+          model,
           path,
           messages: [
             ...messages,

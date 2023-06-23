@@ -17,14 +17,21 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { clsx } from 'clsx'
+import { ModelName } from '@/lib/types'
 
 export interface ChatProps extends ComponentProps<'div'> {
+  initialModel?: ModelName
   initialMessages?: Message[]
   id?: string
 }
 
-export function Chat({ id, initialMessages, className }: ChatProps) {
-  const [model, setModel] = useState<'gpt-3.5-turbo' | 'gpt-4'>('gpt-3.5-turbo')
+export function Chat({
+  id,
+  initialMessages,
+  initialModel,
+  className
+}: ChatProps) {
+  const [model, setModel] = useState<ModelName>(initialModel || 'gpt-3.5-turbo')
   const { messages, append, reload, stop, isLoading, input, setInput } =
     useChat({
       initialMessages,
@@ -38,7 +45,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
   return (
     <div className={clsx('flex', 'flex-col', 'items-center')}>
       <Select
-        onValueChange={value => setModel(value as 'gpt-3.5-turbo' | 'gpt-4')}
+        onValueChange={value => setModel(value as ModelName)}
         defaultValue={model}
       >
         <SelectTrigger className={clsx('w-44', 'mt-4')}>
