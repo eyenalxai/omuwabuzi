@@ -118,7 +118,6 @@ const CodeBlock: FC<Props> = memo(({ language, value }) => {
         language={language}
         style={coldarkDark}
         PreTag="div"
-        showLineNumbers
         customStyle={{
           margin: 0,
           width: '100%',

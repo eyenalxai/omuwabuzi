@@ -1,13 +1,13 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
 import { kv } from '@vercel/kv'
 
 import { auth } from '@/auth'
 import { type Chat } from '@/lib/types'
+import { getLastMonthTimestampRange } from '@/lib/utils'
 
-export async function getChats(userId?: string | null) {
+export async function getAllChats(userId?: string | null) {
   if (!userId) {
     return []
   }
@@ -17,6 +17,37 @@ export async function getChats(userId?: string | null) {
     const chats: string[] = await kv.zrange(`user:chat:${userId}`, 0, -1, {
       rev: true
     })
+
+    for (const chat of chats) {
+      pipeline.hgetall(chat)
+    }
+
+    const results = await pipeline.exec()
+
+    return results as Chat[]
+  } catch (error) {
+    return []
+  }
+}
+
+export async function getRecentChats(userId?: string | null) {
+  if (!userId) {
+    return []
+  }
+
+  try {
+    const pipeline = kv.pipeline()
+    const { oneMonthAgoMillis, nowMillis } = getLastMonthTimestampRange()
+
+    const chats: string[] = await kv.zrange(
+      `user:chat:${userId}`,
+      nowMillis,
+      oneMonthAgoMillis,
+      {
+        rev: true,
+        byScore: true
+      }
+    )
 
     for (const chat of chats) {
       pipeline.hgetall(chat)
@@ -62,30 +93,4 @@ export async function removeChat({ id, path }: { id: string; path: string }) {
 
   revalidatePath('/')
   return revalidatePath(path)
-}
-
-export async function clearChats() {
-  const session = await auth()
-
-  if (!session?.user?.id) {
-    return {
-      error: 'Unauthorized'
-    }
-  }
-
-  const chats: string[] = await kv.zrange(`user:chat:${session.user.id}`, 0, -1)
-  if (!chats.length) {
-    return redirect('/')
-  }
-  const pipeline = kv.pipeline()
-
-  for (const chat of chats) {
-    pipeline.del(chat)
-    pipeline.zrem(`user:chat:${session.user.id}`, chat)
-  }
-
-  await pipeline.exec()
-
-  revalidatePath('/')
-  return redirect('/')
 }

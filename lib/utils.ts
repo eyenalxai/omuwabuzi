@@ -32,3 +32,15 @@ export async function fetcher<JSON = any>(
 
   return res.json()
 }
+
+export const getLastMonthTimestampRange = () => {
+  const oneMonthAgo = new Date()
+  oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1)
+  const oneMonthAgoMillis = oneMonthAgo.getTime()
+  const nowMillis = new Date().getTime()
+
+  return {
+    oneMonthAgoMillis,
+    nowMillis
+  }
+}
