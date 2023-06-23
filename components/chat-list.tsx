@@ -18,7 +18,7 @@ export function ChatList({ messages }: ChatList) {
         <div key={index}>
           <ChatMessage message={message} />
           {index < messages.length - 1 && (
-            <Separator className="my-4 md:my-8" />
+            <Separator className="my-2 md:my-4" />
           )}
         </div>
       ))}
