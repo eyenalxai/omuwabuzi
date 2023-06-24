@@ -46,16 +46,13 @@ export async function POST(req: Request) {
         const id = json.id ?? nanoid()
         const createdAt = Date.now()
         const path = `/chat/${id}`
-        const newMessages = removeMessagesToFitLimit(
-          [
-            ...messages,
-            {
-              content: completion,
-              role: 'assistant'
-            }
-          ],
-          model
-        )
+        const newMessages = [
+          ...messages,
+          {
+            content: completion,
+            role: 'assistant'
+          }
+        ]
         const oldPrice: string | null = await kv.hget(`chat:${id}`, 'price')
         const price = calculatePrice(newMessages, model, oldPrice)
 
@@ -67,7 +64,7 @@ export async function POST(req: Request) {
           price,
           model,
           path,
-          messages: newMessages
+          messages: removeMessagesToFitLimit(newMessages, model)
         }
         await kv.hmset(`chat:${id}`, payload)
         await kv.zadd(`user:chat:${userId}`, {
