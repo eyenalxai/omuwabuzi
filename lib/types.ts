@@ -19,3 +19,5 @@ export type ServerActionResult<Result> = Promise<
 >
 
 export type ModelName = 'gpt-3.5-turbo' | 'gpt-4'
+
+export type Role = Exclude<Message['role'], 'system'>
