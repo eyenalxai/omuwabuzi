@@ -15,21 +15,29 @@ export const removeMessagesToFitLimit = (
   model: ModelName
 ): Message[] => {
   const limit = MODEL_TOKENS_LIMITS[model]
-  let totalTokens = 0
 
-  for (const message of messages) {
-    const tokens = encode(message.content)
-    totalTokens += tokens.length
+  const getTotalTokens = (msgs: Message[]): number => {
+    return msgs.reduce((total, message) => {
+      const tokens = encode(message.content)
+      return total + tokens.length
+    }, 0)
   }
 
-  while (totalTokens > limit && messages.length > 0) {
-    const removedMessage = messages.shift()
+  const removeFirstMessage = (msgs: Message[]): Message[] => {
+    return msgs.slice(1)
+  }
 
-    if (removedMessage) {
-      const removedTokens = encode(removedMessage.content)
-      totalTokens -= removedTokens.length
+  const shouldRemoveMoreMessages = (msgs: Message[]): boolean => {
+    return getTotalTokens(msgs) > limit && msgs.length > 0
+  }
+
+  const removeMessagesRecursively = (msgs: Message[]): Message[] => {
+    if (shouldRemoveMoreMessages(msgs)) {
+      const updatedMessages = removeFirstMessage(msgs)
+      return removeMessagesRecursively(updatedMessages)
     }
+    return msgs
   }
 
-  return messages
+  return removeMessagesRecursively(messages)
 }
