@@ -5,6 +5,7 @@ import { Configuration, OpenAIApi } from 'openai-edge'
 import { auth } from '@/auth'
 import { nanoid } from '@/lib/utils'
 import { calculatePrice } from '@/lib/pricing'
+import { removeMessagesToFitLimit } from '@/lib/limits'
 
 export const runtime = 'edge'
 
@@ -45,13 +46,16 @@ export async function POST(req: Request) {
         const id = json.id ?? nanoid()
         const createdAt = Date.now()
         const path = `/chat/${id}`
-        const newMessages = [
-          ...messages,
-          {
-            content: completion,
-            role: 'assistant'
-          }
-        ]
+        const newMessages = removeMessagesToFitLimit(
+          [
+            ...messages,
+            {
+              content: completion,
+              role: 'assistant'
+            }
+          ],
+          model
+        )
         const oldPrice: string | null = await kv.hget(`chat:${id}`, 'price')
         const price = calculatePrice(newMessages, model, oldPrice)
 
