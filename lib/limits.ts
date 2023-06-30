@@ -2,6 +2,8 @@ import { ModelName } from '@/lib/types'
 import { Message } from 'ai/react/dist'
 import { encode } from 'gpt-tokenizer'
 
+const LIMIT_MODIFIER = 0.75
+
 export const GPT_4_TOKENS_LIMIT = 8000
 export const GPT_3_5_TURBO_TOKENS_LIMIT = 4000
 
@@ -14,7 +16,7 @@ export const removeMessagesToFitLimit = (
   messages: Message[],
   model: ModelName
 ): Message[] => {
-  const limit = MODEL_TOKENS_LIMITS[model]
+  const limit = MODEL_TOKENS_LIMITS[model] * LIMIT_MODIFIER
 
   const getTotalTokens = (msgs: Message[]): number => {
     return msgs.reduce((total, message) => {
