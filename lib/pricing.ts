@@ -62,10 +62,15 @@ export const calculateUsage = (chats: Chat[]) => {
   const pricesThisMonth = chats?.filter(
     chat => new Date(chat?.createdAt).getMonth() === new Date().getMonth()
   )
+  const pricesLastMonth = chats?.filter(
+    chat => new Date(chat?.createdAt).getMonth() === new Date().getMonth() - 1
+  )
   const totalSpentThisMonth = pricesThisMonth?.reduce((a, b) => a + b.price, 0)
+  const totalSpentLastMonth = pricesLastMonth?.reduce((a, b) => a + b.price, 0)
 
   return {
     totalSpent,
-    totalSpentThisMonth
+    totalSpentThisMonth,
+    totalSpentLastMonth
   }
 }

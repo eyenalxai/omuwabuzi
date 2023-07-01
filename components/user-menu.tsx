@@ -17,6 +17,7 @@ export interface UserMenuProps {
   user: Session['user']
   totalSpent: number
   totalSpentThisMonth: number
+  totalSpentLastMonth: number
 }
 
 function getUserInitials(name: string) {
@@ -27,7 +28,8 @@ function getUserInitials(name: string) {
 export function UserMenu({
   user,
   totalSpent,
-  totalSpentThisMonth
+  totalSpentThisMonth,
+  totalSpentLastMonth
 }: UserMenuProps) {
   return (
     <div className="flex items-center justify-between">
@@ -54,6 +56,9 @@ export function UserMenu({
             <div className="text-xs text-zinc-500">{user?.email}</div>
             <div className="mt-2 text-xs text-zinc-500">
               ${totalSpentThisMonth.toFixed(2)} — Usage This Month
+            </div>
+            <div className="mt-2 text-xs text-zinc-500">
+              ${totalSpentLastMonth.toFixed(2)} — Usage Last Month
             </div>
             <div className="text-xs text-zinc-500">
               ${totalSpent.toFixed(2)} — Usage Total
